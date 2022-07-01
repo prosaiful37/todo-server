@@ -19,10 +19,23 @@ const client = new MongoClient(uri, {
 async function run(){
   try{
     await client.connect();
-    const todoCollection  = client.db('todoapp').collection('product'); 
+    const todoCollection  = client.db('todo_app').collection('list'); 
 
 
+    //get data
+    app.get('/list', async(req, res) => {
+      const query = {};
+      const cursor = todoCollection.find(query)
+      const lists = await cursor.toArray();
+      res.send(lists)
+  });
 
+     //insert data
+     app.post('/list', async(req, res) => {
+      const newList = req.body;
+      const result = await todoCollection.insertOne(newList);
+      res.send(result);
+  })
 
 
   }
